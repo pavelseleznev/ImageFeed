@@ -39,7 +39,7 @@ final class ImagesListCell: UITableViewCell {
         dateBackgroundBlur.alpha = 0.1
         dateBackgroundBlur.layer.cornerRadius = 6
         dateBackgroundBlur.layer.masksToBounds = true
-        dateLabelBackground.insertSubview(dateBackgroundBlur, at: 0)
         dateBackgroundBlur.frame = dateLabelBackground.bounds.insetBy(dx: -4, dy: -1)
+        dateLabelBackground.insertSubview(dateBackgroundBlur, at: 0)
     }
 }
