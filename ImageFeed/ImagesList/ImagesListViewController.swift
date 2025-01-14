@@ -15,8 +15,9 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Private Properties
     /// An array containing the list of pre-loaded photos
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    
-    /// Date formatter for the date, e.g. 20 September 2024. The localization of the text is set to Russian.
+    /// A property containing segue identifier for SingleImageViewController
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    /// Date formatter for the date, e.g. 20 September 2024. The localization of the text is set to Russian
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
@@ -31,9 +32,27 @@ final class ImagesListViewController: UIViewController {
         tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 12, left: .zero, bottom: 12, right: .zero)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            guard
+                let viewController = segue.destination as? SingleImageViewController,
+                let indexPath = sender as? IndexPath
+            else {
+                assertionFailure("Invalid segue destination")
+                return
+            }
+            
+            let image = UIImage(named: photosName[indexPath.row])
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
 }
 
 /// Sets the height of the cells depending on the displaying image
+/// Checks the segue identifier for SingleImageViewController
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
@@ -46,6 +65,10 @@ extension ImagesListViewController: UITableViewDelegate {
         let scale = imageViewWidth / imageWidth
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
 }
 
@@ -64,6 +87,7 @@ extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         photosName.count
     }
+    
 }
 
 /// Configures the image cell, e.g. image, date, Like button
