@@ -10,7 +10,7 @@ Written in Swift. Only for iPhone.
 * Authorization - OAuth Unsplash.
 * The main screen is a list of photos. You can view photos, add or remove them from favorites.
 * You can view each photo individually, and share them with other people.
-* You are able also to fill out your profile with a short bio and an avatar.
+* You are also able to fill out your profile with a short bio and an avatar.
 
 ## **Technical requirements:**
 * Authorization is via OAuth Unsplash and POST request to receive Auth Token.
