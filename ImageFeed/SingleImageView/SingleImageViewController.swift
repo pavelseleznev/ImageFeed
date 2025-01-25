@@ -23,8 +23,8 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
-    // MARK: - Private Properties
-    // Adjusts image to correct size
+    // MARK: - Private Method
+    /// Adjusts image to correct size in the view
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -38,7 +38,6 @@ final class SingleImageViewController: UIViewController {
         scrollView.layoutIfNeeded()
         scrollViewDidZoom(scrollView)
     }
-    
     
     // MARK: - IB Actions
     @IBAction private func didTapBackButton() {
@@ -64,12 +63,13 @@ final class SingleImageViewController: UIViewController {
     }
 }
 
+// MARK: UIScrollViewDelegate
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
     
-    // Adjusts image to center after zooming
+    /// Adjusts image to center of the view after zooming
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let offsetX = max((scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5, 0.0)
         let offsetY = max((scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5, 0.0)

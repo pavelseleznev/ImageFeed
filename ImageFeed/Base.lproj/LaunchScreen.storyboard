@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="C81-jb-ktB">
-                                <rect key="frame" x="160.33333333333334" y="401" width="72.666666666666657" height="75.333333333333314"/>
+                                <rect key="frame" x="160.33333333333331" y="401" width="73" height="75"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>

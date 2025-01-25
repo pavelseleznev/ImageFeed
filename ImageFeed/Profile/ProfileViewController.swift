@@ -10,13 +10,15 @@ import UIKit
 final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
+    /// Displays user's avatar photo on the profile screen view
     private weak var avatarImageView: UIImageView!
-    // Displays user's full name
+    /// Displays user's full name on the profile screen view
     private weak var nameLabel: UILabel!
-    // Displays user's login
+    /// Displays user's login on the profile screen view
     private weak var loginLabel: UILabel!
-    // Displays user's description
+    /// Displays user's description on the profile screen view
     private weak var descriptionLabel: UILabel!
+    /// Outlet for logout button on the profile screen view
     private weak var logoutButton: UIButton!
     
     // MARK: - IBAction
@@ -33,6 +35,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    /// Adds user's avatar image on the profile screen view
     private func addAvatarImageView() {
         let avatarImage = UIImageView(image: UIImage(named: "avatar"))
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +51,7 @@ final class ProfileViewController: UIViewController {
         self.avatarImageView = avatarImage
     }
     
-    // Shows user's full name
+    /// Shows user's full name on the profile screen view
     private func addNameLabel() {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
@@ -64,7 +67,7 @@ final class ProfileViewController: UIViewController {
         self.nameLabel = nameLabel
     }
     
-    // Shows user's login
+    /// Shows user's login on the profile screen view
     private func addLoginLabel() {
         let loginLabel = UILabel()
         loginLabel.text = "@ekaterina_nov"
@@ -80,7 +83,7 @@ final class ProfileViewController: UIViewController {
         self.nameLabel = loginLabel
     }
     
-    // Shows user's description
+    /// Shows user's description on the profile screen view
     private func addDescriptionLabel() {
         let descriptionLabel = UILabel()
         descriptionLabel.text = "Hello, World!"
@@ -96,6 +99,7 @@ final class ProfileViewController: UIViewController {
         descriptionLabel.trailingAnchor.constraint(equalTo: nameLabel!.trailingAnchor).isActive = true
     }
     
+    /// Adds logout button to the profile screen view
     private func addLogoutButton() {
         let logoutButton = UIButton()
         logoutButton.setImage(UIImage(named: "logout_button"), for: .normal)
