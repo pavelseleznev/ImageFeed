@@ -22,7 +22,7 @@ final class OAuth2Service {
             case .success(let data):
                 do {
                     let decoder = JSONDecoder()
-                    let oauthTokenData = try decoder.decode(OAuthTokenResponseBody.self, from: data)
+                    let oauthTokenData = try decoder.decode(OAuth2TokenResponseBody.self, from: data)
                     completion(.success(oauthTokenData.accessToken))
                 } catch {
                     print("Failed decoding token response")
