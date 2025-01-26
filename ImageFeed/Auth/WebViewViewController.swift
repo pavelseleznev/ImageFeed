@@ -30,8 +30,9 @@ final class WebViewViewController: UIViewController {
     // MARK: - Private Methods
     /// Loads the login page using Unsplash web address. Provides the required data - access key, redirect uri etc.
     private func loadAuthView() {
-        guard var urlComponents = URLComponents(string: Constants.authorizeURLString) else
-        { return }
+        guard var urlComponents = URLComponents(string: Constants.authorizeURLString) else {
+            return
+        }
         
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
@@ -40,8 +41,9 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         
-        guard let url = urlComponents.url else
-        { return }
+        guard let url = urlComponents.url else {
+            return
+        }
         
         let request = URLRequest(url: url)
         webView.load(request)

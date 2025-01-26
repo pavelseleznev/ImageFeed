@@ -10,9 +10,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     
     // MARK: - Private Properties
-    /// Identifier to show initial authentication screen
-    private var showAuthenticationScreenSegueIdentifier = "showAuthenticationScreen"
-    /// Protocol for loading saved token from token storage
+    private let showAuthenticationScreenSegueIdentifier = "showAuthenticationScreen"
     private let oauth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
     
     // MARK: - Lifecycle
@@ -39,7 +37,7 @@ final class SplashViewController: UIViewController {
     /// Private method for showing main app screen - a list of photos
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
+            print("Invalid window configuration")
             return
         }
         
@@ -57,7 +55,7 @@ extension SplashViewController {
                 let navigationController = segue.destination as? UINavigationController,
                 let viewController = navigationController.viewControllers[0] as? AuthViewController
             else {
-                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
+                print("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
                 return
             }
             viewController.delegate = self

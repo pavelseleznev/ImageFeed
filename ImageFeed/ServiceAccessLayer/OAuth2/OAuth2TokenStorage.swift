@@ -20,14 +20,9 @@ final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
     }
     
     var token: String? {
-        get {
-            userDefaults.string(forKey: Keys.token.rawValue)
-        }
+        get { userDefaults.string(forKey: Keys.token.rawValue) }
         set {
-            guard let newValue else {
-                assertionFailure("Invalid token")
-                return
-            }
+            guard let newValue else { return }
             userDefaults.set(newValue, forKey: Keys.token.rawValue)
         }
     }

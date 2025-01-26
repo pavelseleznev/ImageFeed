@@ -9,10 +9,13 @@ import UIKit
 
 final class AuthViewController: UIViewController {
     
-    // MARK: - Internal Properties
+    // MARK: - Internal Property
+    weak var delegate: AuthViewControllerDelegate?
+    
+    // MARK: - Private Properties
     private let showWebViewSegueIdentifier: String = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
-    weak var delegate: AuthViewControllerDelegate?
+    private let tokenStorage = OAuth2TokenStorage()
     
     // MARK: - Lifecycle
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -20,7 +23,7 @@ final class AuthViewController: UIViewController {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
             else {
-                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                print("Failed to prepare for \(showWebViewSegueIdentifier)")
                 return
             }
             webViewViewController.delegate = self
@@ -32,15 +35,14 @@ final class AuthViewController: UIViewController {
 
 // MARK: WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
-    // Checks token if the OAuth loaded/saved and switches to tabBarViewController from login screen 
+    // Checks if the OAuth token is loaded/saved and switches to tabBarViewController from login screen
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
         
         oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
             switch result {
             case .success(let accessToken):
-                let tokenStorage = OAuth2TokenStorage()
                 tokenStorage.token = accessToken
                 delegate?.didAuthenticate(self)
             case .failure(let error):
