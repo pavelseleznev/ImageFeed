@@ -19,14 +19,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="pRY-4p-rUb">
-                                <rect key="frame" x="160" y="401" width="73" height="75"/>
+                                <rect key="frame" x="159" y="399.66666666666669" width="75" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="7Ib-qn-dYH"/>
+                                    <constraint firstAttribute="height" constant="78" id="Vye-9V-x4F"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Emu-gm-OuL"/>
                         <color key="backgroundColor" name="YP_black_color"/>
                         <constraints>
-                            <constraint firstItem="pRY-4p-rUb" firstAttribute="centerY" secondItem="Emu-gm-OuL" secondAttribute="centerY" id="7tj-Jv-OfN"/>
-                            <constraint firstItem="pRY-4p-rUb" firstAttribute="centerX" secondItem="Emu-gm-OuL" secondAttribute="centerX" id="PR8-RX-bfB"/>
+                            <constraint firstItem="pRY-4p-rUb" firstAttribute="centerY" secondItem="Emu-gm-OuL" secondAttribute="centerY" id="95Q-Du-477"/>
+                            <constraint firstItem="pRY-4p-rUb" firstAttribute="centerX" secondItem="Emu-gm-OuL" secondAttribute="centerX" id="yw9-0T-IU9"/>
                         </constraints>
                     </view>
                     <connections>
