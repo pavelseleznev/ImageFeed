@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,14 +18,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="C81-jb-ktB">
-                                <rect key="frame" x="160.33333333333334" y="401" width="72.666666666666657" height="75.333333333333314"/>
+                                <rect key="frame" x="159" y="399.66666666666669" width="75" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="78" id="afd-X1-LLJ"/>
+                                    <constraint firstAttribute="width" constant="75" id="kIB-Pn-nsO"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" name="YP_black_color"/>
                         <constraints>
-                            <constraint firstItem="C81-jb-ktB" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="6dc-yN-MvD"/>
-                            <constraint firstItem="C81-jb-ktB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="rVK-z3-fpI"/>
+                            <constraint firstItem="C81-jb-ktB" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Tnq-IU-rBr"/>
+                            <constraint firstItem="C81-jb-ktB" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="qnf-Bh-oZr"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -35,5 +40,8 @@
     </scenes>
     <resources>
         <image name="splash_screen_logo" width="72.666664123535156" height="75.333335876464844"/>
+        <namedColor name="YP_black_color">
+            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

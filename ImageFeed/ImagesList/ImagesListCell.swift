@@ -21,7 +21,7 @@ final class ImagesListCell: UITableViewCell {
     
     // MARK: - Internal Property
     /// Cell identifier for ImagesListViewController tableView cells
-    static let reuseIdentifier = "ImagesListCell"
+    static let showImagesListCellIdentifier: String = "ImagesListCell"
     
     // MARK: - Lifecycle
     /// Override method for applying blur effect layers in ImagesListViewController

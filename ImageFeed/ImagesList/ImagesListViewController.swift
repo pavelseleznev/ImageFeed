@@ -10,13 +10,13 @@ import UIKit
 final class ImagesListViewController: UIViewController {
     
     // MARK: - IB Outlet
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     
     // MARK: - Private Properties
     /// An array containing the list of pre-loaded photos
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     /// A property containing segue identifier for SingleImageViewController
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private let showSingleImageSegueIdentifier: String = "ShowSingleImage"
     /// Date formatter for the date, e.g. 20 September 2024. The localization of the text is set to Russian
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -39,7 +39,7 @@ final class ImagesListViewController: UIViewController {
                 let viewController = segue.destination as? SingleImageViewController,
                 let indexPath = sender as? IndexPath
             else {
-                assertionFailure("Invalid segue destination")
+                print("Invalid segue destination")
                 return
             }
             
@@ -51,6 +51,7 @@ final class ImagesListViewController: UIViewController {
     }
 }
 
+// MARK: UITableViewDelegate
 /// Sets the height of the cells depending on the displaying image
 /// Checks the segue identifier for SingleImageViewController
 extension ImagesListViewController: UITableViewDelegate {
@@ -72,10 +73,11 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: UITableViewDataSource
 /// Sets the list of cells for displaying images
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.showImagesListCellIdentifier, for: indexPath)
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
