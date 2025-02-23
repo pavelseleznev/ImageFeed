@@ -103,7 +103,9 @@ extension ImagesListViewController {
         cell.dateLabel.text = dateFormatter.string(from: Date())
         
         let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
+        let likeImage = isLiked ? UIImage(named: "Like Button on") : UIImage(named: "Like Button off")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
 }
+
+//TODO: Refactor ImagesListViewController in code; remove view from the storyboard

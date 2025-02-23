@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -20,6 +21,10 @@ final class ProfileViewController: UIViewController {
     private weak var descriptionLabel: UILabel!
     /// Outlet for logout button on the profile screen view
     private weak var logoutButton: UIButton!
+    /// Checks if user's profile is loaded and updates the avatar view
+    private weak var profileImageServiceObserver: NSObjectProtocol?
+    /// Profile service responsible for loading and accessing profile data
+    private var profileService = ProfileService.shared
     
     // MARK: - IBAction
     @IBAction private func didTapLogoutButton () {}
@@ -27,37 +32,32 @@ final class ProfileViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        addAvatarImageView()
-        addNameLabel()
-        addLoginLabel()
-        addDescriptionLabel()
-        addLogoutButton()
+        view.backgroundColor = AppColor.ypBlack
+        
+        updateAvatar()
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            }
+        
+        guard let profile = profileService.profile else { return }
+        updateProfileDetails(profile: profile)
     }
     
     // MARK: - Private Methods
-    /// Adds user's avatar image on the profile screen view
-    private func addAvatarImageView() {
-        let avatarImage = UIImageView(image: UIImage(named: "avatar"))
-        avatarImage.translatesAutoresizingMaskIntoConstraints = false
-        
-        avatarImage.layer.cornerRadius = 35
-        avatarImage.layer.masksToBounds = true
-        view.addSubview(avatarImage)
-        
-        avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-        avatarImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        avatarImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        self.avatarImageView = avatarImage
-    }
     
     /// Shows user's full name on the profile screen view
-    private func addNameLabel() {
+    private func setupNameLabel(_ name: String) {
         let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        nameLabel.text = name
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        nameLabel.textColor = .white
+        nameLabel.textColor = AppColor.ypWhite
         nameLabel.font = .boldSystemFont(ofSize: 23)
         view.addSubview(nameLabel)
         
@@ -68,12 +68,12 @@ final class ProfileViewController: UIViewController {
     }
     
     /// Shows user's login on the profile screen view
-    private func addLoginLabel() {
+    private func setupLoginLabel(_ login: String) {
         let loginLabel = UILabel()
-        loginLabel.text = "@ekaterina_nov"
+        loginLabel.text = login
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        loginLabel.textColor = UIColor(named: "YP_light_gray_color")
+        loginLabel.textColor = AppColor.ypGray
         loginLabel.font = .systemFont(ofSize: 13)
         view.addSubview(loginLabel)
         
@@ -84,12 +84,12 @@ final class ProfileViewController: UIViewController {
     }
     
     /// Shows user's description on the profile screen view
-    private func addDescriptionLabel() {
+    private func setupDescriptionLabel(_ bio: String) {
         let descriptionLabel = UILabel()
-        descriptionLabel.text = "Hello, World!"
+        descriptionLabel.text = bio
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        descriptionLabel.textColor = .white
+        descriptionLabel.textColor = AppColor.ypWhite
         descriptionLabel.font = .systemFont(ofSize: 13)
         descriptionLabel.numberOfLines = 0
         view.addSubview(descriptionLabel)
@@ -100,9 +100,9 @@ final class ProfileViewController: UIViewController {
     }
     
     /// Adds logout button to the profile screen view
-    private func addLogoutButton() {
+    private func setupLogoutButton() {
         let logoutButton = UIButton()
-        logoutButton.setImage(UIImage(named: "logout_button"), for: .normal)
+        logoutButton.setImage(UIImage(named: "Logout Button"), for: .normal)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
         
@@ -111,5 +111,38 @@ final class ProfileViewController: UIViewController {
         logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         
         logoutButton.addTarget(self, action: #selector(Self.didTapLogoutButton), for: UIControl.Event.touchUpInside)
+    }
+    
+    /// Adds user's avatar image on the profile screen view
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        let avatarImage = UIImageView()
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        avatarImage.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "Userpick Stub"),
+            options: [.processor(processor)]
+        )
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
+        avatarImage.layer.masksToBounds = true
+        view.addSubview(avatarImage)
+        
+        avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        avatarImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        avatarImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        self.avatarImageView = avatarImage
+    }
+}
+
+extension ProfileViewController {
+    private func updateProfileDetails(profile: Profile) {
+        setupNameLabel(profile.name)
+        setupLoginLabel(profile.loginName)
+        setupDescriptionLabel(profile.bio)
+        setupLogoutButton()
     }
 }

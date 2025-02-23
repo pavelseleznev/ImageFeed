@@ -8,38 +8,36 @@
 import Foundation
 
 extension URLSession {
-    /// Loads the web data on the main queue
-    func data( for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void ) {
+    private func data(
+        for request: URLRequest,
+        completion: @escaping (Result<Data, Error>) -> Void
+    ) -> URLSessionTask {
         let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
         
-        Task {
-            do {
-                let data = try await self.loadNetworkData(request: request)
-                fulfillCompletionOnTheMainThread(.success(data))
-            } catch {
-                print("Failed to loadNetworkData request error code \(error)")
-                fulfillCompletionOnTheMainThread(.failure(error))
+        let task = dataTask(with: request, completionHandler: { data, response, error in
+            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                if 200 ..< 300 ~= statusCode {
+                    fulfillCompletionOnTheMainThread(.success(data))
+                } else {
+                    let handleError = self.showNetworkError(for: statusCode)
+                    print("[dataTask]: Network Error - \(handleError)")
+                    fulfillCompletionOnTheMainThread(.failure(handleError))
+                }
+            } else if let error = error {
+                print("[dataTask]: Network Error - \(error.localizedDescription)")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.internalServerError))
+            } else {
+                print("[dataTask]: Network Error - \(NetworkError.internalServerError)")
+                fulfillCompletionOnTheMainThread(.failure(NetworkError.internalServerError))
             }
-        }
+        })
+        return task
     }
     
-    /// Checks for response code from the server
-    private func loadNetworkData(request: URLRequest) async throws -> Data {
-        let (data, response) = try await URLSession.shared.data(for: request)
-        if let response = response as? HTTPURLResponse,
-           response.statusCode < 200 || response.statusCode >= 300
-        {
-            let statusCode = response.statusCode
-            throw showNetworkError(for: statusCode)
-        }
-        return data
-    }
-    
-    /// Handles server's error responses
     private func showNetworkError(for statusCode: Int) -> NetworkError {
         if let httpsCode = HTTPStatusCode(rawValue: statusCode) {
             switch httpsCode {
@@ -53,4 +51,27 @@ extension URLSession {
         }
         return NetworkError.urlSessionError
     }
+    
+    func objectTask<T: Decodable>(
+        for request: URLRequest,
+        completion: @escaping (Result<T, Error>) -> Void) -> URLSessionTask {
+            
+            let task = data(for: request) { (result: Result<Data, Error>) in
+                switch result {
+                case .success(let data):
+                    do {
+                        let decoder = JSONDecoder()
+                        let jsonResponse = try decoder.decode(T.self, from: data)
+                        completion(.success(jsonResponse))
+                    } catch {
+                        print("[objectTask]: Decoding error - \(error.localizedDescription), Data: \(String(data: data, encoding: .utf8) ?? "")")
+                        completion(.failure(error))
+                    }
+                case .failure(let error):
+                    print("[objectTask]: Error - \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            }
+            return task
+        }
 }
