@@ -12,15 +12,15 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
     /// Displays user's avatar photo on the profile screen view
-    private weak var avatarImageView: UIImageView!
+    private weak var avatarImageView: UIImageView?
     /// Displays user's full name on the profile screen view
-    private weak var nameLabel: UILabel!
+    private weak var nameLabel: UILabel?
     /// Displays user's login on the profile screen view
-    private weak var loginLabel: UILabel!
+    private weak var loginLabel: UILabel?
     /// Displays user's description on the profile screen view
-    private weak var descriptionLabel: UILabel!
+    private weak var descriptionLabel: UILabel?
     /// Outlet for logout button on the profile screen view
-    private weak var logoutButton: UIButton!
+    private weak var logoutButton: UIButton?
     /// Checks if user's profile is loaded and updates the avatar view
     private weak var profileImageServiceObserver: NSObjectProtocol?
     /// Profile service responsible for loading and accessing profile data
@@ -42,7 +42,7 @@ final class ProfileViewController: UIViewController {
                 queue: .main
             ) { [weak self] _ in
                 guard let self else { return }
-                self.updateAvatar()
+                updateAvatar()
             }
         
         guard let profile = profileService.profile else { return }
@@ -61,9 +61,16 @@ final class ProfileViewController: UIViewController {
         nameLabel.font = .boldSystemFont(ofSize: 23)
         view.addSubview(nameLabel)
         
-        nameLabel.topAnchor.constraint(equalTo: self.avatarImageView!.bottomAnchor, constant: 8).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: avatarImageView!.leadingAnchor).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        guard let avatarImageView = avatarImageView else {
+            return
+        }
+        
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
+            nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+        ])
+        
         self.nameLabel = nameLabel
     }
     
@@ -77,9 +84,16 @@ final class ProfileViewController: UIViewController {
         loginLabel.font = .systemFont(ofSize: 13)
         view.addSubview(loginLabel)
         
-        loginLabel.topAnchor.constraint(equalTo: nameLabel!.bottomAnchor, constant: 8).isActive = true
-        loginLabel.leadingAnchor.constraint(equalTo: nameLabel!.leadingAnchor).isActive = true
-        loginLabel.trailingAnchor.constraint(equalTo: nameLabel!.trailingAnchor).isActive = true
+        guard let nameLabel = nameLabel else {
+            return
+        }
+        
+        NSLayoutConstraint.activate([
+            loginLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            loginLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            loginLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
+        ])
+        
         self.nameLabel = loginLabel
     }
     
@@ -94,9 +108,15 @@ final class ProfileViewController: UIViewController {
         descriptionLabel.numberOfLines = 0
         view.addSubview(descriptionLabel)
         
-        descriptionLabel.topAnchor.constraint(equalTo: nameLabel!.bottomAnchor, constant: 8).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: nameLabel!.leadingAnchor).isActive = true
-        descriptionLabel.trailingAnchor.constraint(equalTo: nameLabel!.trailingAnchor).isActive = true
+        guard let nameLabel = nameLabel else {
+            return
+        }
+        
+        NSLayoutConstraint.activate([
+            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            descriptionLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
+        ])
     }
     
     /// Adds logout button to the profile screen view
@@ -106,9 +126,15 @@ final class ProfileViewController: UIViewController {
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
         
-        logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45).isActive = true
-        logoutButton.leadingAnchor.constraint(greaterThanOrEqualTo: avatarImageView!.trailingAnchor).isActive = true
-        logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        guard let avatarImageView = avatarImageView else {
+            return
+        }
+        
+        NSLayoutConstraint.activate([
+            logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
+            logoutButton.leadingAnchor.constraint(greaterThanOrEqualTo: avatarImageView.trailingAnchor),
+            logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+        ])
         
         logoutButton.addTarget(self, action: #selector(Self.didTapLogoutButton), for: UIControl.Event.touchUpInside)
     }
@@ -130,11 +156,13 @@ final class ProfileViewController: UIViewController {
         avatarImage.layer.masksToBounds = true
         view.addSubview(avatarImage)
         
-        avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-        avatarImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        avatarImage.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        self.avatarImageView = avatarImage
+        NSLayoutConstraint.activate([
+            avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            avatarImage.heightAnchor.constraint(equalToConstant: 70),
+            avatarImage.widthAnchor.constraint(equalToConstant: 70)
+        ])
+        avatarImageView = avatarImage
     }
 }
 

@@ -10,9 +10,9 @@ import Foundation
 final class ProfileImageService {
     private weak var urlSession = URLSession.shared
     private weak var task: URLSessionTask?
-    private (set) var avatarURL: String?
+    private(set) var avatarURL: String?
     private init() {}
-    private let oauth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage()
+    private let oauth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
@@ -55,7 +55,7 @@ final class ProfileImageService {
                     return
                 }
                 completion(.success(avatarURL))
-
+                
             case .failure(let error):
                 print("[objectTask]: URLSession error - Failed decoding avatarURL: \(error.localizedDescription)")
                 completion(.failure(error))

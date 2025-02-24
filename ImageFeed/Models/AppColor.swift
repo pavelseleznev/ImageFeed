@@ -4,7 +4,7 @@
 //
 //  Created by Pavel Seleznev on 2/22/25.
 //
- 
+
 import UIKit
 
 struct AppColor {

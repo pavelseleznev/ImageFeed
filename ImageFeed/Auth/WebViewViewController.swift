@@ -14,27 +14,31 @@ final class WebViewViewController: UIViewController {
     weak var delegate: WebViewViewControllerDelegate?
     private var estimatedProgressObservation: NSKeyValueObservation?
     
-    lazy var webView: WKWebView = {
+    private lazy var webView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.backgroundColor = AppColor.ypWhite
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
-        webView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        webView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
         return webView
     }()
     
-    lazy var progressView: UIProgressView = {
+    private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
         progressView.tintColor = AppColor.ypBlack
         progressView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(progressView)
-        progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
         return progressView
     }()
     
@@ -44,7 +48,6 @@ final class WebViewViewController: UIViewController {
         webView.navigationDelegate = self
         
         loadAuthView()
-        configureBackButton()
         
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
@@ -75,20 +78,6 @@ final class WebViewViewController: UIViewController {
         
         let request = URLRequest(url: url)
         webView.load(request)
-    }
-    
-    private func configureBackButton() {
-        let backButton = UIButton()
-        backButton.setImage(UIImage(named: "Nav Back Button"), for: .normal)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(backButton)
-        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 9).isActive = true
-        backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 9).isActive = true
-        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-    }
-    
-    @objc private func didTapBackButton(_ sender: Any?) {
-        delegate?.webViewViewControllerDidCancel(self)
     }
     
     /// Provides the functionality for the loading progress indicator of the website on the login screen

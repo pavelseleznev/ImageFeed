@@ -10,6 +10,8 @@
 		D40134AA2D5C49AE00C1FDA9 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40134A92D5C49AE00C1FDA9 /* ProfileImageService.swift */; };
 		D40134AC2D5C49E400C1FDA9 /* UserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40134AB2D5C49E400C1FDA9 /* UserResult.swift */; };
 		D40134AE2D5C4B5000C1FDA9 /* ImageResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40134AD2D5C4B5000C1FDA9 /* ImageResult.swift */; };
+		D40961B32D6B9DE500754E4E /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40961B22D6B9DE500754E4E /* HTTPMethod.swift */; };
+		D40961B52D6BA08200754E4E /* AuthErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40961B42D6BA08200754E4E /* AuthErrorAlert.swift */; };
 		D422DFB02D29A44700E971F8 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422DFAF2D29A44700E971F8 /* SingleImageViewController.swift */; };
 		D42B30662D46A2F000BDD87A /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B30652D46A2F000BDD87A /* NetworkError.swift */; };
 		D42B30682D46A30700BDD87A /* HTTPStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42B30672D46A30700BDD87A /* HTTPStatusCode.swift */; };
@@ -48,6 +50,8 @@
 		D40134A92D5C49AE00C1FDA9 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		D40134AB2D5C49E400C1FDA9 /* UserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResult.swift; sourceTree = "<group>"; };
 		D40134AD2D5C4B5000C1FDA9 /* ImageResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResult.swift; sourceTree = "<group>"; };
+		D40961B22D6B9DE500754E4E /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		D40961B42D6BA08200754E4E /* AuthErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthErrorAlert.swift; sourceTree = "<group>"; };
 		D422DFAF2D29A44700E971F8 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		D42B30652D46A2F000BDD87A /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D42B30672D46A30700BDD87A /* HTTPStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatusCode.swift; sourceTree = "<group>"; };
@@ -109,8 +113,10 @@
 				D456AAF52D6987F800882A0F /* AppColor.swift */,
 				D4D2050C2D381C3500705482 /* Constants.swift */,
 				D42B30652D46A2F000BDD87A /* NetworkError.swift */,
-				D42B30672D46A30700BDD87A /* HTTPStatusCode.swift */,
+				D40961B42D6BA08200754E4E /* AuthErrorAlert.swift */,
 				D49E57932D53142B0039C7AD /* AuthServiceError.swift */,
+				D40961B22D6B9DE500754E4E /* HTTPMethod.swift */,
+				D42B30672D46A30700BDD87A /* HTTPStatusCode.swift */,
 				D49E57952D53146C0039C7AD /* UIBlockingProgressHUD.swift */,
 			);
 			path = Models;
@@ -312,12 +318,14 @@
 				D479809D2D46B16800BFBFD4 /* WebViewViewControllerDelegate.swift in Sources */,
 				D4F8F4E82D290FC600E0A242 /* ProfileViewController.swift in Sources */,
 				D441391E2D13CC18007D5995 /* AppDelegate.swift in Sources */,
+				D40961B32D6B9DE500754E4E /* HTTPMethod.swift in Sources */,
 				D40134AA2D5C49AE00C1FDA9 /* ProfileImageService.swift in Sources */,
 				D42B306A2D46A38200BDD87A /* OAuth2TokenResponseBody.swift in Sources */,
 				D4D205122D3B504400705482 /* AuthViewController.swift in Sources */,
 				D42FAF172D43B5FF00929470 /* SplashViewController.swift in Sources */,
 				D4D2050D2D381C3500705482 /* Constants.swift in Sources */,
 				D422DFB02D29A44700E971F8 /* SingleImageViewController.swift in Sources */,
+				D40961B52D6BA08200754E4E /* AuthErrorAlert.swift in Sources */,
 				D42B30662D46A2F000BDD87A /* NetworkError.swift in Sources */,
 				D47BCB6C2D42E7BC00362971 /* URLSession+data.swift in Sources */,
 				D40134AE2D5C4B5000C1FDA9 /* ImageResult.swift in Sources */,

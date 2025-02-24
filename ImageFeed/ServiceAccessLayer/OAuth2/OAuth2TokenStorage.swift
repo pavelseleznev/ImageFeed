@@ -10,16 +10,18 @@ import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
     private let keyChain = KeychainWrapper.standard
+    static let shared = OAuth2TokenStorage()
+    private init() {}
     
-    private enum Keys: String {
+    private enum Key: String {
         case token
     }
     
     var token: String? {
-        get { keyChain.string(forKey: Keys.token.rawValue) }
+        get { keyChain.string(forKey: Key.token.rawValue) }
         set {
             guard let newValue else { return }
-            keyChain.set(newValue, forKey: Keys.token.rawValue)
+            keyChain.set(newValue, forKey: Key.token.rawValue)
         }
     }
 }

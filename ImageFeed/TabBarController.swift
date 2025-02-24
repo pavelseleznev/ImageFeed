@@ -11,6 +11,7 @@ final class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTabBarAppearance()
         
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         let imagesListViewController = storyboard.instantiateViewController(withIdentifier: "ImagesListViewController")
@@ -26,12 +27,13 @@ final class TabBarController: UITabBarController {
             selectedImage: nil
         )
         
-        UITabBar.appearance().barTintColor = AppColor.ypBlack
-        UITabBar.appearance().tintColor = AppColor.ypWhite
-        
-        UINavigationBar.appearance().barTintColor = AppColor.ypBlack
-        UINavigationBar.appearance().tintColor = AppColor.ypWhite
-        
-        self.viewControllers = [imagesListViewController, profileViewController]
+        viewControllers = [imagesListViewController, profileViewController]
+    }
+    
+    private func setupTabBarAppearance() {
+        tabBar.backgroundColor = AppColor.ypBlack
+        tabBar.barTintColor = AppColor.ypBlack
+        tabBar.tintColor = AppColor.ypWhite
+        tabBar.isTranslucent = false
     }
 }
