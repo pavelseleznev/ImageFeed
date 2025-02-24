@@ -8,54 +8,66 @@
 import Foundation
 
 final class OAuth2Service {
-    static let shared = OAuth2Service()
+    private weak var task: URLSessionTask?
+    private var urlSession = URLSession.shared
+    private var lastCode: String?
     private init() {}
+    static let shared = OAuth2Service()
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            print("[fetchOAuthToken]: Error tokenData - \(AuthServiceError.invalidRequest)")
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        task?.cancel()
+        lastCode = code
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Failed to execute makeOAuthTokenRequest")
+            print("[makeOAuthTokenRequest]: Request error - \(AuthServiceError.invalidRequest)")
+            completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
-        URLSession.shared.data(for: request) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let oauthTokenData = try decoder.decode(OAuth2TokenResponseBody.self, from: data)
-                    completion(.success(oauthTokenData.accessToken))
-                } catch {
-                    print("Failed decoding token response")
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuth2TokenResponseBody, Error>) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tokenData):
+                    completion(.success(tokenData.accessToken))
+                    self?.task = nil
+                    self?.lastCode = nil
+                case .failure(let error):
+                    print("[objectTask]: URLSession error tokenData - \(error.localizedDescription)")
                     completion(.failure(error))
                 }
-            case .failure(let error):
-                print("Failed loading token response")
-                completion(.failure(error))
             }
         }
-    }
-    
-    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard var urlComponents = URLComponents(string: Constants.tokenURLString) else {
-            print("Failed to create URLComponents from Constants.tokenURLString")
-            return nil
+        self.task = task
+        task.resume()
+        
+        func makeOAuthTokenRequest(code: String) -> URLRequest? {
+            guard var urlComponents = URLComponents(string: Constants.tokenURLString) else {
+                print("[makeOAuthTokenRequest]: URLComponents error - Failed to create URL")
+                return nil
+            }
+            
+            urlComponents.queryItems = [
+                URLQueryItem(name: "client_id", value: Constants.accessKey),
+                URLQueryItem(name: "client_secret", value: Constants.secretKey),
+                URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+                URLQueryItem(name: "code", value: code),
+                URLQueryItem(name: "grant_type", value: Constants.authorizationCode)]
+            
+            guard let url = urlComponents.url else {
+                print("[makeOAuthTokenRequest]: URLComponents error - Failed to create URL from urlComponents from Constants")
+                return nil
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = HTTPMethod.post.rawValue
+            
+            return request
         }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: Constants.authorizationCode)]
-        
-        guard let url = urlComponents.url else {
-            print("Failed to create URL from urlComponents from Constants")
-            return nil
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        return request
     }
 }

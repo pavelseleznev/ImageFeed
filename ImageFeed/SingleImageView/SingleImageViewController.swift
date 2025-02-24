@@ -76,3 +76,5 @@ extension SingleImageViewController: UIScrollViewDelegate {
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
     }
 }
+
+//TODO: Refactor SingleImageViewController in code; remove view from the storyboard

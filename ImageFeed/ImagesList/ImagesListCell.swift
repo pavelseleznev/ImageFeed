@@ -42,4 +42,7 @@ final class ImagesListCell: UITableViewCell {
         dateBackgroundBlur.frame = dateLabelBackground.bounds.insetBy(dx: -4, dy: -1)
         dateLabelBackground.insertSubview(dateBackgroundBlur, at: 0)
     }
+    // TODO: Modify the transparency to match the look from Figma
 }
+
+//TODO: Refactor ImagesListCell; remove view from the storyboard
