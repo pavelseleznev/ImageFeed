@@ -65,7 +65,7 @@ final class OAuth2Service {
             }
             
             var request = URLRequest(url: url)
-            request.httpMethod = HTTPMethod.typePost
+            request.httpMethod = HTTPMethod.post.rawValue
             
             return request
         }

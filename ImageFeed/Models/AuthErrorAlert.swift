@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum AuthErrorAlert {
-    static let accessibilityAlertIdentifier: String = "authErrorAlert"
+struct AccessibilityIdentifiers {
+    static let authErrorAlert: String = "authErrorAlert"
 }

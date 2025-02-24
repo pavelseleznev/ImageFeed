@@ -7,6 +7,8 @@
 
 import Foundation
 
-enum HTTPMethod {
-    static let typePost: String = "POST"
+enum HTTPMethod: String {
+    case post = "POST"
+    case get = "GET"
+    case delete = "DELETE"
 }

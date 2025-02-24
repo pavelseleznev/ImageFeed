@@ -103,7 +103,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         let action = UIAlertAction(title: "Ok", style: .default)
         
         authErrorAlert.addAction(action)
-        authErrorAlert.view.accessibilityIdentifier = AuthErrorAlert.accessibilityAlertIdentifier
+        authErrorAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.authErrorAlert
         present(authErrorAlert, animated: true, completion: nil)
         // TODO: Implement resolution:
         // attempt fetchOAuthToken
