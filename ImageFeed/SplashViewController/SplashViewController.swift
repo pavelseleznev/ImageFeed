@@ -19,15 +19,16 @@ final class SplashViewController: UIViewController {
         view.backgroundColor = AppColor.ypBlack
         setupSplashLogo()
         
-        guard let accessToken = oauth2TokenStorage.token else {
+        guard let token = oauth2TokenStorage.token else {
             setupAuthScreen()
             return
         }
         
-        fetchProfile(accessToken)
+        fetchProfile(token)
     }
     
     // MARK: - Private Methods
+    /// Private method for adding the app's logo on splash screen
     private func setupSplashLogo() {
         let logo = UIImageView(image: UIImage(named: "Splash Screen Logo"))
         view.addSubview(logo)
@@ -38,6 +39,7 @@ final class SplashViewController: UIViewController {
         ])
     }
     
+    /// Private method for loading authentication screen after user presses login button
     private func setupAuthScreen() {
         let authViewController = AuthViewController()
         let navController = UINavigationController(rootViewController: authViewController)
@@ -59,6 +61,7 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
+    /// Private method for loading profile and switching to main screen of the app
     private func fetchProfile(_ token: String) {
         
         UIBlockingProgressHUD.show()
@@ -69,7 +72,7 @@ final class SplashViewController: UIViewController {
             
             switch result {
             case .success(let profileData):
-                ProfileImageService.shared.fetchProfileImageURL(username: profileData.username) { _ in }
+                ProfileImageService.shared.fetchProfileImage(username: profileData.username) { _ in }
                 switchToTabBarController()
             case .failure(let error):
                 print("[fetchOAuthToken]: Error profileData - \(error.localizedDescription)")
@@ -78,6 +81,7 @@ final class SplashViewController: UIViewController {
         }
     }
     
+    /// Private method for showing login error alert
     private func showLoginErrorAlert() {
         let authErrorAlert = UIAlertController(
             title: "Что-то пошло не так",
@@ -89,9 +93,6 @@ final class SplashViewController: UIViewController {
         authErrorAlert.addAction(action)
         authErrorAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.authErrorAlert
         present(authErrorAlert, animated: true, completion: nil)
-        //TODO: Implement resolution:
-        //a) dismiss the view;
-        //b) attempt fetchProfile
     }
 }
 
@@ -101,8 +102,7 @@ extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
         
-        guard let accessToken = oauth2TokenStorage.token else {
-            return }
-        fetchProfile(accessToken)
+        guard let token = oauth2TokenStorage.token else { return }
+        fetchProfile(token)
     }
 }

@@ -25,9 +25,8 @@ final class ProfileViewController: UIViewController {
     private weak var profileImageServiceObserver: NSObjectProtocol?
     /// Profile service responsible for loading and accessing profile data
     private var profileService = ProfileService.shared
-    
-    // MARK: - IBAction
-    @IBAction private func didTapLogoutButton () {}
+    /// Profile logout service responsible for log in out the user, deleting token, web cookies, cached photos and profile data
+    private var profileLogoutService = ProfileLogoutService.shared
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -50,7 +49,6 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    
     /// Shows user's full name on the profile screen view
     private func setupNameLabel(_ name: String) {
         let nameLabel = UILabel()
@@ -163,6 +161,35 @@ final class ProfileViewController: UIViewController {
             avatarImage.widthAnchor.constraint(equalToConstant: 70)
         ])
         avatarImageView = avatarImage
+    }
+    
+    private func showLogoutConfirmationAlert() {
+        let logoutConfirmationAlert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            profileLogoutService.logout()
+        }
+        
+        let noAction = UIAlertAction(title: "Нет", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            dismiss(animated: true)
+        }
+        
+        logoutConfirmationAlert.addAction(yesAction)
+        logoutConfirmationAlert.addAction(noAction)
+        logoutConfirmationAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.logoutAlert
+        present(logoutConfirmationAlert, animated: true, completion: nil)
+    }
+    
+    // MARK: - IBAction
+    @IBAction private func didTapLogoutButton () {
+        showLogoutConfirmationAlert()
     }
 }
 

@@ -24,4 +24,8 @@ final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
             keyChain.set(newValue, forKey: Key.token.rawValue)
         }
     }
+    
+    func cleanTokenStorage() {
+        keyChain.removeObject(forKey: Key.token.rawValue)
+    }
 }

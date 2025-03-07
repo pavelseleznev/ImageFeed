@@ -28,6 +28,7 @@ final class AuthViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    /// Private method for adding the app's logo on auth screen
     private func setupAuthLogo() {
         let logo = UIImageView(image: UIImage(named: "Auth Screen Logo"))
         view.addSubview(logo)
@@ -38,6 +39,7 @@ final class AuthViewController: UIViewController {
         ])
     }
     
+    /// Private method for adding login button
     private func setupLoginButton() {
         let loginButton = UIButton()
         loginButton.titleLabel?.font = .systemFont(ofSize: 17.0, weight: .bold)
@@ -57,6 +59,7 @@ final class AuthViewController: UIViewController {
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
     }
     
+    /// Private method for switching to webViewController when user presses login button
     @objc private func didTapLoginButton() {
         let webViewViewController = WebViewViewController()
         webViewViewController.delegate = self
@@ -64,36 +67,15 @@ final class AuthViewController: UIViewController {
         navigationController?.pushViewController(webViewViewController, animated: true)
     }
     
+    /// Private method for adding back button in the webViewController
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "Nav Back Button")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "Nav Back Button")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = AppColor.ypBlack
     }
-}
-
-// MARK: WebViewViewControllerDelegate
-extension AuthViewController: WebViewViewControllerDelegate {
-    // Checks if the OAuth token is loaded/saved and switches to tabBarViewController from login screen
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        
-        UIBlockingProgressHUD.show()
-        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self else { return }
-            UIBlockingProgressHUD.dismiss()
-            
-            switch result {
-            case .success(let accessToken):
-                tokenStorage.token = accessToken
-                delegate?.didAuthenticate(self)
-            case .failure(let error):
-                print("[fetchOAuthToken]: Error tokendata - Failed loading fetchOAuthToken: \(error.localizedDescription)")
-                showAuthErrorAlert()
-            }
-            vc.dismiss(animated: true)
-        }
-    }
     
+    /// Private method for showing login error alert
     private func showAuthErrorAlert() {
         let authErrorAlert = UIAlertController(
             title: "Что-то пошло не так",
@@ -105,10 +87,33 @@ extension AuthViewController: WebViewViewControllerDelegate {
         authErrorAlert.addAction(action)
         authErrorAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.authErrorAlert
         present(authErrorAlert, animated: true, completion: nil)
-        // TODO: Implement resolution:
-        // attempt fetchOAuthToken
+    }
+}
+
+// MARK: WebViewViewControllerDelegate
+extension AuthViewController: WebViewViewControllerDelegate {
+    /// Checks if the OAuth token is loaded/saved and switches to tabBarViewController from login screen
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        
+        UIBlockingProgressHUD.show()
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let token):
+                tokenStorage.token = token
+                delegate?.didAuthenticate(self)
+            case .failure(let error):
+                print("[fetchOAuthToken]: Error tokendata - Failed loading fetchOAuthToken: \(error.localizedDescription)")
+                showAuthErrorAlert()
+            }
+            vc.dismiss(animated: true)
+        }
     }
     
+    /// Method for dismissing webViewController
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }

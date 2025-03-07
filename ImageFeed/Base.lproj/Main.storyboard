@@ -20,7 +20,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="lWS-ah-3J4">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="393" placeholderIntrinsicHeight="852" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="IQt-AH-SDA" userLabel="Image View">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="393" placeholderIntrinsicHeight="852" image="Stub SingleImageView" translatesAutoresizingMaskIntoConstraints="NO" id="IQt-AH-SDA" userLabel="Image View">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                         <color key="backgroundColor" name="YP Black (iOS)"/>
                                     </imageView>
@@ -105,7 +105,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="U3g-RE-PVa" userLabel="Cell Image">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Stub" translatesAutoresizingMaskIntoConstraints="NO" id="U3g-RE-PVa" userLabel="Cell Image">
                                                     <rect key="frame" x="16" y="4" width="361" height="192"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -128,7 +128,10 @@
                                                         <constraint firstAttribute="width" constant="44" id="JIY-51-zSX"/>
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal" image="Like Button on"/>
+                                                    <state key="normal" image="Like Button off"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="pNs-1N-ppe" eventType="touchUpInside" id="yrc-nb-1D5"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="YP Black (iOS)"/>
@@ -148,7 +151,7 @@
                                         <connections>
                                             <outlet property="cellImage" destination="U3g-RE-PVa" id="glG-vr-KMa"/>
                                             <outlet property="dateLabel" destination="Sjm-8p-4tr" id="JeD-yS-VTs"/>
-                                            <outlet property="dateLabelBackground" destination="Sjm-8p-4tr" id="5Gz-Ds-nGr"/>
+                                            <outlet property="dateLabelBackground" destination="Sjm-8p-4tr" id="RwZ-gB-mqe"/>
                                             <outlet property="likeButton" destination="Egd-4n-gNf" id="SKA-nR-rK8"/>
                                         </connections>
                                     </tableViewCell>
@@ -177,13 +180,14 @@
         </scene>
     </scenes>
     <resources>
-        <image name="0" width="1600" height="1059"/>
-        <image name="Like Button on" width="42" height="42"/>
+        <image name="Like Button off" width="42" height="42"/>
         <image name="Nav Back Button White" width="24" height="24"/>
         <image name="Share Button" width="50" height="50"/>
+        <image name="Stub" width="168" height="224"/>
+        <image name="Stub SingleImageView" width="83" height="75"/>
         <image name="Tab Editorial Active" width="30" height="30"/>
         <namedColor name="YP Black (iOS)">
-            <color red="0.10196078431372549" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="YP White (iOS)">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

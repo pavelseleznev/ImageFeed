@@ -8,7 +8,7 @@
 import UIKit
 import ProgressHUD
 
-///Loading indicator for time-consuming tasks (e.g. fetchOAuthToken/fetchProfile)
+///Loading indicator for network tasks (e.g. fetchOAuthToken/fetchProfile)
 final class UIBlockingProgressHUD {
     private static var window: UIWindow? {
         UIApplication.shared.windows.first

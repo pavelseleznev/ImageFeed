@@ -8,11 +8,11 @@
 import Foundation
 
 final class ProfileService {
-    static let shared = ProfileService()
-    private let oauth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
     private weak var urlSession = URLSession.shared
     private weak var task: URLSessionTask?
     private(set) var profile: Profile?
+    private let oauth2TokenStorage: OAuth2TokenStorageProtocol = OAuth2TokenStorage.shared
+    static let shared = ProfileService()
     private init() {}
     
     func fetchProfile(token: String, completion: @escaping (Result<Profile, Error>) -> Void ) {
@@ -34,9 +34,7 @@ final class ProfileService {
                     loginName: "@\(profile.username ?? "")",
                     bio: profile.bio ?? ""
                 )
-                guard let profileData = self.profile else {
-                    return
-                }
+                guard let profileData = self.profile else { return }
                 completion(.success(profileData))
                 self.task = nil
             case .failure(let error):
@@ -57,5 +55,9 @@ final class ProfileService {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
         return request
+    }
+    
+    func cleanProfileData() {
+        profile = nil
     }
 }

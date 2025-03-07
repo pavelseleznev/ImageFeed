@@ -8,11 +8,11 @@
 import Foundation
 
 final class OAuth2Service {
-    private weak var task: URLSessionTask?
     private var urlSession = URLSession.shared
+    private weak var task: URLSessionTask?
     private var lastCode: String?
-    private init() {}
     static let shared = OAuth2Service()
+    private init() {}
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
@@ -33,8 +33,8 @@ final class OAuth2Service {
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuth2TokenResponseBody, Error>) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let tokenData):
-                    completion(.success(tokenData.accessToken))
+                case .success(let token):
+                    completion(.success(token.accessToken))
                     self?.task = nil
                     self?.lastCode = nil
                 case .failure(let error):
