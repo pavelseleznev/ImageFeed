@@ -22,13 +22,13 @@ final class AuthViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = AppColor.ypBlack
         setupAuthLogo()
         setupLoginButton()
         configureBackButton()
     }
     
     // MARK: - Private Methods
-    /// Private method for adding the app's logo on auth screen
     private func setupAuthLogo() {
         let logo = UIImageView(image: UIImage(named: "Auth Screen Logo"))
         view.addSubview(logo)
@@ -39,7 +39,6 @@ final class AuthViewController: UIViewController {
         ])
     }
     
-    /// Private method for adding login button
     private func setupLoginButton() {
         let loginButton = UIButton()
         loginButton.titleLabel?.font = .systemFont(ofSize: 17.0, weight: .bold)
@@ -59,7 +58,6 @@ final class AuthViewController: UIViewController {
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
     }
     
-    /// Private method for switching to webViewController when user presses login button
     @objc private func didTapLoginButton() {
         let webViewViewController = WebViewViewController()
         webViewViewController.delegate = self
@@ -67,7 +65,6 @@ final class AuthViewController: UIViewController {
         navigationController?.pushViewController(webViewViewController, animated: true)
     }
     
-    /// Private method for adding back button in the webViewController
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "Nav Back Button")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "Nav Back Button")
@@ -75,7 +72,6 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = AppColor.ypBlack
     }
     
-    /// Private method for showing login error alert
     private func showAuthErrorAlert() {
         let authErrorAlert = UIAlertController(
             title: "Что-то пошло не так",
@@ -113,7 +109,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
         }
     }
     
-    /// Method for dismissing webViewController
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }

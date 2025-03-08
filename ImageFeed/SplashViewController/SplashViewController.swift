@@ -28,7 +28,6 @@ final class SplashViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    /// Private method for adding the app's logo on splash screen
     private func setupSplashLogo() {
         let logo = UIImageView(image: UIImage(named: "Splash Screen Logo"))
         view.addSubview(logo)
@@ -39,7 +38,6 @@ final class SplashViewController: UIViewController {
         ])
     }
     
-    /// Private method for loading authentication screen after user presses login button
     private func setupAuthScreen() {
         let authViewController = AuthViewController()
         let navController = UINavigationController(rootViewController: authViewController)
@@ -50,7 +48,6 @@ final class SplashViewController: UIViewController {
         present(navController, animated: true)
     }
     
-    /// Private method for showing main app screen - a list of photos
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             print("Invalid window configuration")
@@ -61,7 +58,6 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
-    /// Private method for loading profile and switching to main screen of the app
     private func fetchProfile(_ token: String) {
         
         UIBlockingProgressHUD.show()
@@ -81,7 +77,6 @@ final class SplashViewController: UIViewController {
         }
     }
     
-    /// Private method for showing login error alert
     private func showLoginErrorAlert() {
         let authErrorAlert = UIAlertController(
             title: "Что-то пошло не так",

@@ -26,7 +26,6 @@ final class SingleImageViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    /// Private method loads the single image and centers in on screen
     private func setImage() {
         UIBlockingProgressHUD.show()
         imageView.kf.setImage(with: fullImageURL) { [weak self] result in
@@ -44,7 +43,6 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
-    /// Adjusts image to correct size in the view
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -59,7 +57,6 @@ final class SingleImageViewController: UIViewController {
         scrollViewDidZoom(scrollView)
     }
     
-    /// Private method for showing error alert when viewing a single image
     private func showSingleImageLoadError() {
         let singleImageLoadError = UIAlertController(
             title: "Что-то пошло не так",

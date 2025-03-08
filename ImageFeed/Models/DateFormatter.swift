@@ -8,7 +8,7 @@
 import Foundation
 
 extension DateFormatter {
-    static let longDateFormatter: DateFormatter = {
+    static let dateFormatterDefault: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
@@ -17,15 +17,15 @@ extension DateFormatter {
         return dateFormatter
     }()
     
+    static let dateFormatterISO: ISO8601DateFormatter = {
+        let dateFormatterISO = ISO8601DateFormatter()
+        return dateFormatterISO
+    }()
+    
     func date(from dateString: String?) -> Date? {
         guard let dateString = dateString else {
             return nil
         }
-        return dateFormatterISO.date(from: dateString)
+        return DateFormatter.dateFormatterISO.date(from: dateString)
     }
 }
-
-let dateFormatterISO: ISO8601DateFormatter = {
-    let dateFormatterISO = ISO8601DateFormatter()
-    return dateFormatterISO
-}()

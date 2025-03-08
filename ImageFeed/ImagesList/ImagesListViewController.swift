@@ -14,7 +14,6 @@ final class ImagesListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
     // MARK: - Private Properties
-    /// A property containing segue identifier for SingleImageViewController
     private let showSingleImageSegueIdentifier: String = "ShowSingleImage"
     private let imagesListService = ImagesListService.shared
     private weak var imagesListServiceObserver: NSObjectProtocol?
@@ -42,17 +41,15 @@ final class ImagesListViewController: UIViewController {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard let viewController = segue.destination as? SingleImageViewController,
                   let indexPath = sender as? IndexPath else { return }
-            if let url = imagesListService.photos[indexPath.row].fullImageURL,
-               let imageURL = URL(string: url) {
-                viewController.fullImageURL = imageURL
-            }
+            
+            let photo = photos[indexPath.row]
+            viewController.fullImageURL = URL(string: photo.fullImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
         }
     }
     
     // MARK: - Private Method
-    /// Updates the tableView with new photos
     private func updateTableViewAnimated() {
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
@@ -70,7 +67,6 @@ final class ImagesListViewController: UIViewController {
 }
 
 // MARK: UITableViewDelegate
-/// Sets the height of the cells depending on the displaying image
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let image = imagesListService.photos[indexPath.row]
@@ -83,14 +79,12 @@ extension ImagesListViewController: UITableViewDelegate {
         return cellHeight
     }
     
-    /// Checks the segue identifier for SingleImageViewController
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
 }
 
 // MARK: UITableViewDataSource
-/// Sets the list of cells for displaying images
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.showImagesListCellIdentifier, for: indexPath)
@@ -105,31 +99,38 @@ extension ImagesListViewController: UITableViewDataSource {
         return imagesListCell
     }
     
-    /// Configures the image cell, e.g. image, date, Like button
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        if let url = imagesListService.photos[indexPath.row].thumbImageURL,
-           let imageURL = URL(string: url) {
+        let loadedPhotos = photos[indexPath.row]
+        let loadedPhotosURL = URL(string: loadedPhotos.thumbImageURL)
+        let loadedPhotosIndexPath = indexPath
+        
+        DispatchQueue.main.async {
             cell.cellImage.kf.indicatorType = .activity
             cell.cellImage.kf.setImage(
-                with: imageURL,
-                placeholder: UIImage(named: "Stub")) { [weak self] _ in
+                with: loadedPhotosURL,
+                placeholder: UIImage(named: "Stub")) { [ weak self ] _ in
                     guard let self else { return }
-                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                    
+                    guard let currentIndexPath = self.tableView.indexPath(for: cell),
+                          currentIndexPath == loadedPhotosIndexPath else {
+                        cell.cellImage.image = UIImage(named: "Stub")
+                        return
+                    }
                 }
-            if let date = imagesListService.photos[indexPath.row].createdAt {
-                cell.dateLabel.text = DateFormatter.longDateFormatter.string(from: date)
-            }
-            let like = imagesListService.photos[indexPath.row].isLiked
-            cell.setIsLiked(isLiked: like)
         }
+        
+        if let date = self.photos[indexPath.row].createdAt {
+            cell.dateLabel.text = DateFormatter.dateFormatterDefault.string(from: date)
+        }
+        
+        let like = self.photos[indexPath.row].isLiked
+        cell.setIsLiked(isLiked: like)
     }
     
-    /// Sets the number of photos in tableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         photos.count
     }
     
-    /// Loads the next page of list of photos
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == imagesListService.photos.count {
             imagesListService.fetchPhotosNextPage()

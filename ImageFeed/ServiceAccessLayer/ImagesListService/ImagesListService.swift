@@ -39,7 +39,7 @@ final class ImagesListService {
                     Photo(
                         id: photoResult.id,
                         size: CGSize(width: photoResult.width, height: photoResult.height),
-                        createdAt: dateFormatterISO.date(from: photoResult.createdAt ?? ""),
+                        createdAt: DateFormatter.dateFormatterISO.date(from: photoResult.createdAt ?? ""),
                         thumbImageURL: photoResult.urls.thumb,
                         fullImageURL: photoResult.urls.full,
                         isLiked: photoResult.likedByUser)
@@ -68,11 +68,8 @@ final class ImagesListService {
     private func fetchImageURL(page: Int, perPage: Int) -> URLRequest? {
         let listPhotosURL = URL(string: "photos?page=\(page)&&per_page=\(perPage)", relativeTo: Constants.defaultBaseURLString)
         
-        guard let url = listPhotosURL else {
-            return nil
-        }
-        
-        guard let token = oauth2TokenStorage.token else {
+        guard let url = listPhotosURL,
+              let token = oauth2TokenStorage.token else {
             return nil
         }
         
@@ -94,7 +91,7 @@ final class ImagesListService {
                 guard let self else { return }
                 
                 switch result {
-                case .success(_):
+                case .success:
                     if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
                         let photo = self.photos[index]
                         let newPhoto = Photo(
@@ -122,11 +119,8 @@ final class ImagesListService {
     private func fetchLikeUrl(photoId: String, isLike: Bool) -> URLRequest? {
         let photoURL = URL(string: "photos/\(photoId)/like", relativeTo: Constants.defaultBaseURLString)
         
-        guard let url = photoURL else {
-            return nil
-        }
-        
-        guard let token = oauth2TokenStorage.token else {
+        guard let url = photoURL,
+              let token = oauth2TokenStorage.token else {
             return nil
         }
         
