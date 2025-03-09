@@ -11,23 +11,14 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
-    /// Displays user's avatar photo on the profile screen view
     private weak var avatarImageView: UIImageView?
-    /// Displays user's full name on the profile screen view
     private weak var nameLabel: UILabel?
-    /// Displays user's login on the profile screen view
     private weak var loginLabel: UILabel?
-    /// Displays user's description on the profile screen view
     private weak var descriptionLabel: UILabel?
-    /// Outlet for logout button on the profile screen view
     private weak var logoutButton: UIButton?
-    /// Checks if user's profile is loaded and updates the avatar view
     private weak var profileImageServiceObserver: NSObjectProtocol?
-    /// Profile service responsible for loading and accessing profile data
     private var profileService = ProfileService.shared
-    
-    // MARK: - IBAction
-    @IBAction private func didTapLogoutButton () {}
+    private var profileLogoutService = ProfileLogoutService.shared
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -50,8 +41,6 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    
-    /// Shows user's full name on the profile screen view
     private func setupNameLabel(_ name: String) {
         let nameLabel = UILabel()
         nameLabel.text = name
@@ -74,7 +63,6 @@ final class ProfileViewController: UIViewController {
         self.nameLabel = nameLabel
     }
     
-    /// Shows user's login on the profile screen view
     private func setupLoginLabel(_ login: String) {
         let loginLabel = UILabel()
         loginLabel.text = login
@@ -97,7 +85,6 @@ final class ProfileViewController: UIViewController {
         self.nameLabel = loginLabel
     }
     
-    /// Shows user's description on the profile screen view
     private func setupDescriptionLabel(_ bio: String) {
         let descriptionLabel = UILabel()
         descriptionLabel.text = bio
@@ -119,7 +106,6 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    /// Adds logout button to the profile screen view
     private func setupLogoutButton() {
         let logoutButton = UIButton()
         logoutButton.setImage(UIImage(named: "Logout Button"), for: .normal)
@@ -139,7 +125,6 @@ final class ProfileViewController: UIViewController {
         logoutButton.addTarget(self, action: #selector(Self.didTapLogoutButton), for: UIControl.Event.touchUpInside)
     }
     
-    /// Adds user's avatar image on the profile screen view
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
@@ -163,6 +148,35 @@ final class ProfileViewController: UIViewController {
             avatarImage.widthAnchor.constraint(equalToConstant: 70)
         ])
         avatarImageView = avatarImage
+    }
+    
+    private func showLogoutConfirmationAlert() {
+        let logoutConfirmationAlert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            profileLogoutService.logout()
+        }
+        
+        let noAction = UIAlertAction(title: "Нет", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            dismiss(animated: true)
+        }
+        
+        logoutConfirmationAlert.addAction(yesAction)
+        logoutConfirmationAlert.addAction(noAction)
+        logoutConfirmationAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.logoutAlert
+        present(logoutConfirmationAlert, animated: true, completion: nil)
+    }
+    
+    // MARK: - IBAction
+    @IBAction private func didTapLogoutButton () {
+        showLogoutConfirmationAlert()
     }
 }
 

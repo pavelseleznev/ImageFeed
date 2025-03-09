@@ -22,6 +22,7 @@ final class AuthViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = AppColor.ypBlack
         setupAuthLogo()
         setupLoginButton()
         configureBackButton()
@@ -70,29 +71,6 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = AppColor.ypBlack
     }
-}
-
-// MARK: WebViewViewControllerDelegate
-extension AuthViewController: WebViewViewControllerDelegate {
-    // Checks if the OAuth token is loaded/saved and switches to tabBarViewController from login screen
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        
-        UIBlockingProgressHUD.show()
-        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self else { return }
-            UIBlockingProgressHUD.dismiss()
-            
-            switch result {
-            case .success(let accessToken):
-                tokenStorage.token = accessToken
-                delegate?.didAuthenticate(self)
-            case .failure(let error):
-                print("[fetchOAuthToken]: Error tokendata - Failed loading fetchOAuthToken: \(error.localizedDescription)")
-                showAuthErrorAlert()
-            }
-            vc.dismiss(animated: true)
-        }
-    }
     
     private func showAuthErrorAlert() {
         let authErrorAlert = UIAlertController(
@@ -105,8 +83,30 @@ extension AuthViewController: WebViewViewControllerDelegate {
         authErrorAlert.addAction(action)
         authErrorAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.authErrorAlert
         present(authErrorAlert, animated: true, completion: nil)
-        // TODO: Implement resolution:
-        // attempt fetchOAuthToken
+    }
+}
+
+// MARK: WebViewViewControllerDelegate
+extension AuthViewController: WebViewViewControllerDelegate {
+    /// Checks if the OAuth token is loaded/saved and switches to tabBarViewController from login screen
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        
+        UIBlockingProgressHUD.show()
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let token):
+                tokenStorage.token = token
+                delegate?.didAuthenticate(self)
+            case .failure(let error):
+                print("[fetchOAuthToken]: Error tokendata - Failed loading fetchOAuthToken: \(error.localizedDescription)")
+                showAuthErrorAlert()
+            }
+            vc.dismiss(animated: true)
+        }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {

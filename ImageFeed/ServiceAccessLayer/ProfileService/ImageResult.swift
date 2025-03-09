@@ -8,5 +8,5 @@
 import Foundation
 
 struct ImageResult: Codable {
-    let small: String
+    let medium: String
 }

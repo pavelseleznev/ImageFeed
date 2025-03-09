@@ -7,7 +7,6 @@
 
 import Foundation
 
-/// A primary enum containing basic constants such as access/secret keys, full urls strings and additional url paths
 enum Constants {
     static let accessKey: String = "0OU4UDtYPPfRvvtzclbAGBd1DVvEP2wxn0eoKyBIQtE"
     static let secretKey: String = "Sn10mXiGYMvI_6ExCcHFQ44OXa5JafhIWyIWtvLiTOg"

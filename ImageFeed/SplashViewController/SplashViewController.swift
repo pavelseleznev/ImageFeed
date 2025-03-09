@@ -19,12 +19,12 @@ final class SplashViewController: UIViewController {
         view.backgroundColor = AppColor.ypBlack
         setupSplashLogo()
         
-        guard let accessToken = oauth2TokenStorage.token else {
+        guard let token = oauth2TokenStorage.token else {
             setupAuthScreen()
             return
         }
         
-        fetchProfile(accessToken)
+        fetchProfile(token)
     }
     
     // MARK: - Private Methods
@@ -48,7 +48,6 @@ final class SplashViewController: UIViewController {
         present(navController, animated: true)
     }
     
-    /// Private method for showing main app screen - a list of photos
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             print("Invalid window configuration")
@@ -69,7 +68,7 @@ final class SplashViewController: UIViewController {
             
             switch result {
             case .success(let profileData):
-                ProfileImageService.shared.fetchProfileImageURL(username: profileData.username) { _ in }
+                ProfileImageService.shared.fetchProfileImage(username: profileData.username) { _ in }
                 switchToTabBarController()
             case .failure(let error):
                 print("[fetchOAuthToken]: Error profileData - \(error.localizedDescription)")
@@ -89,9 +88,6 @@ final class SplashViewController: UIViewController {
         authErrorAlert.addAction(action)
         authErrorAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.authErrorAlert
         present(authErrorAlert, animated: true, completion: nil)
-        //TODO: Implement resolution:
-        //a) dismiss the view;
-        //b) attempt fetchProfile
     }
 }
 
@@ -101,8 +97,7 @@ extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
         
-        guard let accessToken = oauth2TokenStorage.token else {
-            return }
-        fetchProfile(accessToken)
+        guard let token = oauth2TokenStorage.token else { return }
+        fetchProfile(token)
     }
 }

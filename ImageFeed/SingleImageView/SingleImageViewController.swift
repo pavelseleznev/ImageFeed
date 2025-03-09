@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
@@ -14,17 +15,34 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private weak var scrollView: UIScrollView!
     
     // MARK: - Internal Property
-    var image: UIImage? {
-        didSet {
-            guard isViewLoaded, let image else { return }
-            imageView.image = image
-            imageView.frame.size = image.size
-            rescaleAndCenterImageInScrollView(image: image)
+    var fullImageURL: URL?
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setImage()
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+    }
+    
+    // MARK: - Private Methods
+    private func setImage() {
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let imageResult):
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure(let error):
+                print("[setImage]: Request error - \(error.localizedDescription)")
+                showSingleImageLoadError()
+            }
         }
     }
     
-    // MARK: - Private Method
-    /// Adjusts image to correct size in the view
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -39,27 +57,39 @@ final class SingleImageViewController: UIViewController {
         scrollViewDidZoom(scrollView)
     }
     
+    private func showSingleImageLoadError() {
+        let singleImageLoadError = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Повторить", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            setImage()
+        }
+        
+        let noAction = UIAlertAction(title: "Не надо", style: .default) {
+            [weak self] _ in
+            guard let self else { return }
+            dismiss(animated: true)
+        }
+        
+        singleImageLoadError.addAction(yesAction)
+        singleImageLoadError.addAction(noAction)
+        singleImageLoadError.view.accessibilityIdentifier = AccessibilityIdentifiers.singleImageLoadError
+        present(singleImageLoadError, animated: true, completion: nil)
+    }
+    
     // MARK: - IB Actions
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
-        guard let image else { return }
+        guard let image = imageView.image else { return }
         let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(share, animated: true, completion: nil)
-    }
-    
-    // MARK: - Lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
-        
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        rescaleAndCenterImageInScrollView(image: image)
     }
 }
 
@@ -76,5 +106,3 @@ extension SingleImageViewController: UIScrollViewDelegate {
         scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
     }
 }
-
-//TODO: Refactor SingleImageViewController in code; remove view from the storyboard

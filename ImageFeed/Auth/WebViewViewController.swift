@@ -59,7 +59,6 @@ final class WebViewViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    /// Loads the login page using Unsplash web address. Provides the required data - access key, redirect uri etc.
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: Constants.authorizeURLString) else {
             return
@@ -80,7 +79,6 @@ final class WebViewViewController: UIViewController {
         webView.load(request)
     }
     
-    /// Provides the functionality for the loading progress indicator of the website on the login screen
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
