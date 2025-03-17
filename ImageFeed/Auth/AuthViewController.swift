@@ -55,11 +55,17 @@ final class AuthViewController: UIViewController {
             loginButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 48)
         ])
+        loginButton.accessibilityIdentifier = AccessibilityIdentifier.loginButton.rawValue
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
     }
     
     @objc private func didTapLoginButton() {
         let webViewViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
         webViewViewController.delegate = self
         webViewViewController.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(webViewViewController, animated: true)
