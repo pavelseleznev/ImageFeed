@@ -25,9 +25,6 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
         super.viewDidLoad()
         presenter = ImagesListPresenter(view: self)
         presenter?.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     

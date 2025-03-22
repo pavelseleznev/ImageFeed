@@ -10,7 +10,7 @@ import XCTest
 
 private let email = ""
 private let password = ""
-private let fullName = " "
+private let fullName = ""
 private let username = "@"
 
 final class ImageFeedUITests: XCTestCase {
