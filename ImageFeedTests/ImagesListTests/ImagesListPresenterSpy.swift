@@ -25,6 +25,4 @@ final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     }
     
     func imageListCellDidTapLike(_ cell: ImageFeed.ImagesListCell, indexPath: IndexPath) {}
-    
-    func showChangeLikeError() -> UIAlertController { UIAlertController() }
 }

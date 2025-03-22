@@ -5,7 +5,7 @@
 //  Created by Pavel Seleznev on 3/13/25.
 //
 
-import UIKit
+import Foundation
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
     
@@ -61,13 +61,5 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 view?.setupLikeAlert()
             }
         }
-    }
-    
-    func showChangeLikeError() -> UIAlertController {
-        let changeLikeAlert = UIAlertController(
-            title: "Что-то пошло не так",
-            message: "Не удалось поставить/убрать лайк",
-            preferredStyle: .alert)
-        return changeLikeAlert
     }
 }

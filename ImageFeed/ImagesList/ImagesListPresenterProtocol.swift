@@ -15,5 +15,4 @@ protocol ImagesListPresenterProtocol {
     func viewDidLoad()
     func updateTableViewAnimated()
     func imageListCellDidTapLike(_ cell: ImagesListCell, indexPath: IndexPath)
-    func showChangeLikeError() -> UIAlertController
 }

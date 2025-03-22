@@ -5,8 +5,7 @@
 //  Created by Pavel Seleznev on 3/13/25.
 //
 
-import UIKit
-import Kingfisher
+import Foundation
 
 final class ProfilePresenter: ProfilePresenterProtocol {
     
@@ -41,14 +40,5 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             let url = URL(string: profileImageURL)
         else { return }
         view?.setupAvatarImage(avatarURL: url)
-    }
-    
-    // MARK: - Public Method
-    func showLogoutConfirmationAlert() -> UIAlertController {
-        let logoutConfirmationAlert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert)
-        return logoutConfirmationAlert
     }
 }

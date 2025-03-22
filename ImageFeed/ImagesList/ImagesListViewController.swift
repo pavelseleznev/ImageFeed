@@ -46,7 +46,10 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     
     // MARK: - Public Methods
     func setupLikeAlert() {
-        guard let changeLikeAlert = self.presenter?.showChangeLikeError() else { return }
+        let changeLikeAlert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось поставить/убрать лайк",
+            preferredStyle: .alert)
         let action = UIAlertAction(title: "Ok", style: .default)
         
         changeLikeAlert.addAction(action)

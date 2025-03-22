@@ -19,26 +19,6 @@ struct AuthConfiguration {
     let authorizePath: String
     let authorizationCode: String
     
-    init(accessKey: String,
-         secretKey: String,
-         redirectURI: String,
-         accessScope: String,
-         defaultBaseURLString: URL,
-         authorizeURLString: String,
-         tokenURLString: String,
-         authorizePath: String,
-         authorizationCode: String) {
-        self.accessKey = accessKey
-        self.secretKey = secretKey
-        self.redirectURI = redirectURI
-        self.accessScope = accessScope
-        self.defaultBaseURLString = defaultBaseURLString
-        self.authorizeURLString = authorizeURLString
-        self.tokenURLString = tokenURLString
-        self.authorizePath = authorizePath
-        self.authorizationCode = authorizationCode
-    }
-    
     static var standard: AuthConfiguration {
         return AuthConfiguration(
             accessKey: Constants.accessKey,

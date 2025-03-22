@@ -12,7 +12,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     //MARK: - Public Properties
     var presenter: ProfilePresenterProtocol?
-    var avatarImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+    var avatarImageView = UIImageView()
     
     // MARK: - Private Properties
     private weak var nameLabel: UILabel?
@@ -138,7 +138,10 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     private func setupAlert() {
-        guard let logoutAlert = self.presenter?.showLogoutConfirmationAlert() else { return }
+        let logoutAlert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Да", style: .default) {
             [weak self] _ in
             guard let self else { return }
