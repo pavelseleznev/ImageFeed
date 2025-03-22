@@ -60,7 +60,7 @@ final class OAuth2Service {
                 URLQueryItem(name: "grant_type", value: Constants.authorizationCode)]
             
             guard let url = urlComponents.url else {
-                print("[makeOAuthTokenRequest]: URLComponents error - Failed to create URL from urlComponents from Constants")
+                print("[makeOAuthTokenRequest]: URLComponents error - Failed to create URL from urlComponents from AuthConfiguration")
                 return nil
             }
             

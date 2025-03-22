@@ -8,15 +8,17 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    
+    //MARK: - Public Properties
+    var presenter: ProfilePresenterProtocol?
+    var avatarImageView = UIImageView()
     
     // MARK: - Private Properties
-    private weak var avatarImageView: UIImageView?
     private weak var nameLabel: UILabel?
     private weak var loginLabel: UILabel?
     private weak var descriptionLabel: UILabel?
     private weak var logoutButton: UIButton?
-    private weak var profileImageServiceObserver: NSObjectProtocol?
     private var profileService = ProfileService.shared
     private var profileLogoutService = ProfileLogoutService.shared
     
@@ -24,23 +26,41 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColor.ypBlack
-        
-        updateAvatar()
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self else { return }
-                updateAvatar()
-            }
+        presenter = ProfilePresenter(view: self)
+        presenter?.viewDidLoad()
         
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
     }
     
+    // MARK: - Public Method
+    func setupAvatarImage(avatarURL: URL) {
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        avatarImageView.kf.setImage(
+            with: avatarURL,
+            placeholder: UIImage(named: "Userpick Stub"),
+            options: [.processor(processor)]
+        )
+        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+        avatarImageView.layer.masksToBounds = true
+        view.addSubview(avatarImageView)
+        
+        NSLayoutConstraint.activate([
+            avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            avatarImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 70),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 70)
+        ])
+    }
+    
     // MARK: - Private Methods
+    private func updateProfileDetails(profile: Profile) {
+        setupNameLabel(profile.name)
+        setupLoginLabel(profile.loginName)
+        setupDescriptionLabel(profile.bio)
+        setupLogoutButton()
+    }
+    
     private func setupNameLabel(_ name: String) {
         let nameLabel = UILabel()
         nameLabel.text = name
@@ -49,10 +69,6 @@ final class ProfileViewController: UIViewController {
         nameLabel.textColor = AppColor.ypWhite
         nameLabel.font = .boldSystemFont(ofSize: 23)
         view.addSubview(nameLabel)
-        
-        guard let avatarImageView = avatarImageView else {
-            return
-        }
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
@@ -112,50 +128,20 @@ final class ProfileViewController: UIViewController {
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
         
-        guard let avatarImageView = avatarImageView else {
-            return
-        }
-        
         NSLayoutConstraint.activate([
             logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
             logoutButton.leadingAnchor.constraint(greaterThanOrEqualTo: avatarImageView.trailingAnchor),
             logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
-        
+        logoutButton.accessibilityIdentifier = AccessibilityIdentifier.logoutButton.rawValue
         logoutButton.addTarget(self, action: #selector(Self.didTapLogoutButton), for: UIControl.Event.touchUpInside)
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        let avatarImage = UIImageView()
-        let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        avatarImage.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "Userpick Stub"),
-            options: [.processor(processor)]
-        )
-        avatarImage.translatesAutoresizingMaskIntoConstraints = false
-        avatarImage.layer.masksToBounds = true
-        view.addSubview(avatarImage)
-        
-        NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
-            avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            avatarImage.heightAnchor.constraint(equalToConstant: 70),
-            avatarImage.widthAnchor.constraint(equalToConstant: 70)
-        ])
-        avatarImageView = avatarImage
-    }
-    
-    private func showLogoutConfirmationAlert() {
-        let logoutConfirmationAlert = UIAlertController(
+    private func setupAlert() {
+        let logoutAlert = UIAlertController(
             title: "Пока, пока!",
             message: "Уверены, что хотите выйти?",
             preferredStyle: .alert)
-        
         let yesAction = UIAlertAction(title: "Да", style: .default) {
             [weak self] _ in
             guard let self else { return }
@@ -168,23 +154,14 @@ final class ProfileViewController: UIViewController {
             dismiss(animated: true)
         }
         
-        logoutConfirmationAlert.addAction(yesAction)
-        logoutConfirmationAlert.addAction(noAction)
-        logoutConfirmationAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.logoutAlert
-        present(logoutConfirmationAlert, animated: true, completion: nil)
+        logoutAlert.addAction(yesAction)
+        logoutAlert.addAction(noAction)
+        logoutAlert.view.accessibilityIdentifier = AccessibilityIdentifiers.logoutAlert
+        present(logoutAlert, animated: true, completion: nil)
     }
     
     // MARK: - IBAction
-    @IBAction private func didTapLogoutButton () {
-        showLogoutConfirmationAlert()
-    }
-}
-
-extension ProfileViewController {
-    private func updateProfileDetails(profile: Profile) {
-        setupNameLabel(profile.name)
-        setupLoginLabel(profile.loginName)
-        setupDescriptionLabel(profile.bio)
-        setupLogoutButton()
+    @IBAction private func didTapLogoutButton() {
+        setupAlert()
     }
 }
